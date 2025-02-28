@@ -1,0 +1,39 @@
+name: Test Workflow
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: | 
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Call Endpoint with Pull Request Number
+        run: |
+          python <<EOF
+          import requests
+          import json
+          import os
+          pull_request_number = os.getenv('GITHUB_PULL_REQUEST_NUMBER')
+          url = 'https://0d1a-23-112-11-217.ngrok-free.app/test'
+          payload = json.dumps({'pull_request_number': pull_request_number})
+          headers = {'Content-Type': 'application/json'}
+          response = requests.post(url, headers=headers, data=payload)
+          print(response.status_code)
+          print(response.text)
+          EOF
+        env:
+          GITHUB_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
