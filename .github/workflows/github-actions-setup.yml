@@ -20,4 +20,4 @@ jobs:
           pip install -r requirements.txt
       - name: Test Endpoint
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"pull_request_number": ${{ github.event.pull_request.number }}}' https://35bd-23-112-11-217.ngrok-free.app/test
+          curl -X POST -H "Content-Type: application/json" -d {"pull_request_number": ${{ github.event.pull_request.number }} } https://35bd-23-112-11-217.ngrok-free.app/review_build_error_logs
