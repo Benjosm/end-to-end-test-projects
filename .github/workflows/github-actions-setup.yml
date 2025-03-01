@@ -18,6 +18,10 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Set pull request number
+        env:
+          PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
+        run: echo "PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_ENV
       - name: Test Endpoint
         run: |
-          curl -X POST -H "Content-Type: application/json" -d {"pull_request_number": ${{ github.event.pull_request.number }} } https://35bd-23-112-11-217.ngrok-free.app/review_build_error_logs
+          curl -X POST -H "Content-Type: application/json" -d '{"pull_request_number": "${{ env.PULL_REQUEST_NUMBER }}" }' https://35bd-23-112-11-217.ngrok-free.app/review_build_error_logs
